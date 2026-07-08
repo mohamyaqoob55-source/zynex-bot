@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import os
+import unicodedata
 
 intents = discord.Intents.default()
 intents.members = True
@@ -10,13 +11,13 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 MEMBER_ROLE_NAME = "MEMBERS"
 
+def clean(text):
+    return ''.join(c for c in unicodedata.normalize('NFKD', text) if not unicodedata.combining(c)).lower()
+
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user} (ID: {bot.user.id})")
-    for guild in bot.guilds:
-        print(f"Server: {guild.name}")
-        for ch in guild.text_channels:
-            print(f"  Channel: #{ch.name}")
+    print("Bot is ready and watching for new members...")
 
 @bot.event
 async def on_member_join(member):
@@ -28,7 +29,7 @@ async def on_member_join(member):
             pass
 
     for ch in member.guild.text_channels:
-        if "welcome" in ch.name.lower() or "wellcome" in ch.name.lower():
+        if "wel" in clean(ch.name):
             embed = discord.Embed(
                 title="Welcome!",
                 description=f"Hey {member.mention}, welcome to **{member.guild.name}**!\nYou are member #{member.guild.member_count}.",
@@ -42,7 +43,7 @@ async def on_member_join(member):
 @bot.event
 async def on_member_remove(member):
     for ch in member.guild.text_channels:
-        if "leave" in ch.name.lower():
+        if "lea" in clean(ch.name):
             embed = discord.Embed(
                 title="Goodbye!",
                 description=f"**{member.name}** has left the server.",
