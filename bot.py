@@ -28,5 +28,5 @@ async def on_member_join(member):
 
 import os
 
-TOKEN = os.environ.get("DISCORD_TOKEN", "MTUyNDI5OTgwNzE3NzMxMDIyOA.GcrwC9.vLBnLY4KfUAEkipU-odqVHD9BSk58WBSAEaIkI")
+TOKEN = os.environ.get("DISCORD_TOKEN", "")
 bot.run(TOKEN)
