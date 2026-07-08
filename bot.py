@@ -1,16 +1,14 @@
 import discord
 from discord.ext import commands
+import os
 
 intents = discord.Intents.default()
 intents.members = True
 intents.guilds = True
-intents.message_content = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 MEMBER_ROLE_NAME = "MEMBERS"
-WELCOME_CHANNEL_NAME = "Wellcome"
-LEAVE_CHANNEL_NAME = "Leave"
 
 @bot.event
 async def on_ready():
@@ -23,11 +21,14 @@ async def on_member_join(member):
     if role:
         try:
             await member.add_roles(role, reason="Auto-assigned Member role on join")
-            print(f"Assigned {MEMBER_ROLE_NAME} to {member.name}")
         except discord.Forbidden:
-            print(f"Missing permissions to assign role to {member.name}")
+            pass
 
-    channel = discord.utils.get(member.guild.text_channels, name=WELCOME_CHANNEL_NAME)
+    channel = discord.utils.get(member.guild.text_channels, name="Wellcome")
+    if not channel:
+        channel = discord.utils.get(member.guild.text_channels, name="wellcome")
+    if not channel:
+        channel = discord.utils.get(member.guild.text_channels, name="welcome")
     if channel:
         embed = discord.Embed(
             title="Welcome!",
@@ -39,7 +40,9 @@ async def on_member_join(member):
 
 @bot.event
 async def on_member_remove(member):
-    channel = discord.utils.get(member.guild.text_channels, name=LEAVE_CHANNEL_NAME)
+    channel = discord.utils.get(member.guild.text_channels, name="Leave")
+    if not channel:
+        channel = discord.utils.get(member.guild.text_channels, name="leave")
     if channel:
         embed = discord.Embed(
             title="Goodbye!",
@@ -48,8 +51,6 @@ async def on_member_remove(member):
         )
         embed.set_thumbnail(url=member.display_avatar.url)
         await channel.send(embed=embed)
-
-import os
 
 TOKEN = os.environ.get("DISCORD_TOKEN", "")
 bot.run(TOKEN)
