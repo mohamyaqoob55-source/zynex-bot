@@ -1,0 +1,12 @@
+{
+  "name": "zynex-bot",
+  "version": "1.0.0",
+  "description": "Zynex Discord bot (JavaScript)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1"
+  }
+}
